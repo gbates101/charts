@@ -28,6 +28,11 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       volumes:
+        {{- range $key, $value := .Values.extraSecrets }}
+        - name: "{{ $key }}"
+          secret:
+            secretName: "{{ $key }}"
+        {{- end }}   
         - name: superset-configs
           secret:
             secretName: {{ include "superset.fullname" . }}
@@ -53,6 +58,10 @@ spec:
               mountPath: /home/superset
             - name: storage-volume
               mountPath: /var/lib/superset
+            {{- range $key, $value := .Values.extraSecrets }}
+            - name: "{{ $key }}"
+              mountPath: "{{ $value }}"
+            {{- end }}   
           ports:
             - name: http
               containerPort: 8088

@@ -28,6 +28,9 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       volumes:
+        - name: plaid-conf
+          configMap:
+            name: plaid-conf
         {{- range $key, $value := .Values.extraSecrets }}
         - name: "{{ $key }}"
           secret:
@@ -58,6 +61,8 @@ spec:
               mountPath: /home/superset
             - name: storage-volume
               mountPath: /var/lib/superset
+            - name: plaid-conf
+              mountPath: /etc/plaid
             {{- range $key, $value := .Values.extraSecrets }}
             - name: "{{ $key }}"
               mountPath: "{{ $value }}"
